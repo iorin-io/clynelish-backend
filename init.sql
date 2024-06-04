@@ -1,3 +1,7 @@
+CREATE ROLE "user" WITH LOGIN PASSWORD 'password';
+CREATE DATABASE "clynelish-db" OWNER "user";
+GRANT ALL PRIVILEGES ON DATABASE "clynelish-db" TO "user";
+
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
