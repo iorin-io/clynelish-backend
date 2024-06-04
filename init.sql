@@ -5,8 +5,8 @@ GRANT ALL PRIVILEGES ON DATABASE "clynelish-db" TO "user";
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
+    user_email VARCHAR(100) NOT NULL UNIQUE,
+    user_password VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -39,10 +39,10 @@ CREATE TABLE Transactions (
     transaction_id SERIAL PRIMARY KEY,
     account_id INT NOT NULL,
     child_category_id INT NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
+    transaction_amount DECIMAL(10, 2) NOT NULL,
     transaction_type VARCHAR(7) NOT NULL CHECK (transaction_type IN ('income', 'expense')),
     transaction_date DATE NOT NULL,
-    description TEXT,
+    transaction_description TEXT,
     FOREIGN KEY (account_id) REFERENCES Accounts(account_id),
     FOREIGN KEY (child_category_id) REFERENCES ChildCategories(child_category_id)
 );
