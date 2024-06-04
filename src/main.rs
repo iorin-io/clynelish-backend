@@ -8,6 +8,7 @@ mod db;
 mod handlers;
 mod models;
 mod routes;
+mod serializers;
 
 #[tokio::main]
 async fn main() {
