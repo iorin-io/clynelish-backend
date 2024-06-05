@@ -7,7 +7,15 @@ BEGIN
 END
 $$;
 
-CREATE DATABASE "clynelish-db" OWNER "user";
+DO
+$$
+BEGIN
+   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'clynelish-db') THEN
+      CREATE DATABASE "clynelish-db" OWNER "user";
+   END IF;
+END
+$$;
+
 \c clynelish-db;
 GRANT ALL PRIVILEGES ON DATABASE "clynelish-db" TO "user";
 
