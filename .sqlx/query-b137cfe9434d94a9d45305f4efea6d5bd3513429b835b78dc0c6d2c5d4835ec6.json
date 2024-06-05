@@ -1,0 +1,63 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Transactions (account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "transaction_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "account_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "child_category_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "transaction_amount",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 4,
+        "name": "transaction_type",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "transaction_date",
+        "type_info": "Date"
+      },
+      {
+        "ordinal": 6,
+        "name": "transaction_description",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Numeric",
+        "Varchar",
+        "Date",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "b137cfe9434d94a9d45305f4efea6d5bd3513429b835b78dc0c6d2c5d4835ec6"
+}

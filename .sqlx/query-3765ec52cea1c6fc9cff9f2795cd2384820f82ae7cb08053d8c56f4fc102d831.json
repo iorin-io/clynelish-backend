@@ -1,0 +1,48 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE Accounts SET account_name = $1, initial_balance = $2 WHERE account_id = $3 RETURNING account_id, user_id, account_name, initial_balance, created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "account_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "account_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "initial_balance",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Numeric",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "3765ec52cea1c6fc9cff9f2795cd2384820f82ae7cb08053d8c56f4fc102d831"
+}

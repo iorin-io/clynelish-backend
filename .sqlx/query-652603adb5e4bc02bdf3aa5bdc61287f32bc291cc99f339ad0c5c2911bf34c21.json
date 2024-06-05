@@ -1,0 +1,48 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Accounts (user_id, account_name, initial_balance) VALUES ($1, $2, $3) RETURNING account_id, user_id, account_name, initial_balance, created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "account_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "account_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "initial_balance",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Numeric"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "652603adb5e4bc02bdf3aa5bdc61287f32bc291cc99f339ad0c5c2911bf34c21"
+}

@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM Budgets WHERE budget_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "dd275f8e43a10d3a42cb0245c90fc46b573717df9ca795253d5ff3bf04977b35"
+}

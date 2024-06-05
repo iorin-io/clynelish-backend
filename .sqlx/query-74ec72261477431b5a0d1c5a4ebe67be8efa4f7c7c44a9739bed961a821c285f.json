@@ -1,0 +1,49 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE Users SET username = $1, user_email = $2, user_password = $3 WHERE user_id = $4 RETURNING user_id, username, user_email, user_password, created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "user_password",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamp"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "74ec72261477431b5a0d1c5a4ebe67be8efa4f7c7c44a9739bed961a821c285f"
+}
