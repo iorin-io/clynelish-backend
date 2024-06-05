@@ -26,7 +26,10 @@ pub async fn create_user(
     .await
     {
         Ok(new_user) => (StatusCode::CREATED, Json(new_user)).into_response(),
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Err(e) => {
+            eprintln!("Failed to create user: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 
@@ -46,6 +49,26 @@ pub async fn get_user(
     {
         Ok(user) => (StatusCode::OK, Json(user)).into_response(),
         Err(_) => StatusCode::NOT_FOUND.into_response(),
+    }
+}
+
+pub async fn get_users(
+    Extension(state): Extension<Arc<Mutex<AppState>>>
+) -> impl IntoResponse {
+    let db_pool = state.lock().await.db_pool.clone();
+
+    match query_as!(
+        User,
+        "SELECT user_id, username, user_email, user_password, created_at FROM Users"
+    )
+    .fetch_all(&db_pool)
+    .await
+    {
+        Ok(users) => (StatusCode::OK, Json(users)).into_response(),
+        Err(e) => {
+            eprintln!("Failed to fetch users: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 

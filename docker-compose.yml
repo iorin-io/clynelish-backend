@@ -20,6 +20,7 @@ services:
   # PostgreSQLデータベースサービスの定義
   db:
     image: postgres:13
+    restart: always
     environment:
       POSTGRES_DB: clynelish-db
       POSTGRES_USER: user
@@ -29,8 +30,7 @@ services:
 
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./mysql_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
     networks:
       - clynelish-network
 

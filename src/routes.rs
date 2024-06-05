@@ -4,7 +4,7 @@ use tokio::sync::Mutex;
 use crate::db::AppState;
 
 use crate::handlers::{
-    users::{create_user, get_user, update_user, delete_user},
+    users::{create_user, get_users, get_user, update_user, delete_user},
     accounts::{create_account, get_account, update_account, delete_account},
     categories::{create_parent_category, create_child_category, get_categories, update_parent_category, update_child_category, delete_parent_category, delete_child_category},
     transactions::{create_transaction, get_transaction, update_transaction, delete_transaction},
@@ -14,6 +14,7 @@ use crate::handlers::{
 pub fn create_routes(state: Arc<Mutex<AppState>>) -> Router {
     Router::new()
         .route("/users", post(create_user))
+        .route("/users", get(get_users))
         .route("/users/:id", get(get_user))
         .route("/users/:id", put(update_user))
         .route("/users/:id", delete(delete_user))
