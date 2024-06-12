@@ -12,6 +12,10 @@ chrono = { version = "0.4", features = ["serde"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "fmt"] }
 serde_repr = "0.1.19"
+jsonwebtoken = "9.3.0"
+
+
+
 
 [[bin]]
 name = "clynelish-backend"
