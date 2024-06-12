@@ -23,7 +23,7 @@ CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     user_email VARCHAR(100) NOT NULL UNIQUE,
-    user_password VARCHAR(100) NOT NULL,
+    firebase_uid VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
