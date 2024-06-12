@@ -26,14 +26,14 @@
       {
         "ordinal": 4,
         "name": "category_type",
-        "type_info": "Varchar"
+        "type_info": "Int4"
       }
     ],
     "parameters": {
       "Left": [
         "Varchar",
         "Varchar",
-        "Varchar",
+        "Int4",
         "Int4"
       ]
     },
