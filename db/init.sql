@@ -41,7 +41,7 @@ CREATE TABLE ParentCategories (
     account_id INT NOT NULL,
     parent_category_name VARCHAR(50) NOT NULL,
     color VARCHAR(7) NOT NULL,
-    category_type VARCHAR(7) NOT NULL CHECK (category_type IN ('income', 'expense')),
+    category_type INT NOT NULL CHECK (category_type IN (1, 2)),
     FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
 );
 
