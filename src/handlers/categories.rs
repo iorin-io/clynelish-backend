@@ -21,7 +21,7 @@ pub async fn create_parent_category(
         category.account_id,
         category.parent_category_name,
         category.color,
-        category.category_type
+        category.category_type as i32
     )
     .fetch_one(&db_pool)
     .await
@@ -97,7 +97,7 @@ pub async fn update_parent_category(
         "UPDATE ParentCategories SET parent_category_name = $1, color = $2, category_type = $3 WHERE parent_category_id = $4 RETURNING parent_category_id, account_id, parent_category_name, color, category_type",
         category.parent_category_name,
         category.color,
-        category.category_type,
+        category.category_type as i32,
         parent_category_id
     )
     .fetch_one(&db_pool)
