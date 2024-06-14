@@ -6,7 +6,9 @@ ENV DATABASE_URL=${DATABASE_URL}
 ENV SQLX_OFFLINE=true
 ENV RUST_LOG=debug
 
-RUN apt-get update && apt-get install -y libpq-dev
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    default-libmysqlclient-dev
 
 WORKDIR /clynelish-backend
 
