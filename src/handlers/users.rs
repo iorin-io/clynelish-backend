@@ -17,7 +17,7 @@ pub async fn create_user(
 
     match query_as!(
         User,
-        "INSERT INTO Users (username, user_email, user_password) VALUES ($1, $2, $3) RETURNING user_id, username, user_email, user_password, created_at",
+        "INSERT INTO Users (username, user_email, user_password) VALUES (?, ?, ?) RETURNING user_id, username, user_email, user_password, created_at",
         user.username,
         user.user_email,
         user.user_password
@@ -41,7 +41,7 @@ pub async fn get_user(
 
     match query_as!(
         User,
-        "SELECT user_id, username, user_email, user_password, created_at FROM Users WHERE user_id = $1",
+        "SELECT user_id, username, user_email, user_password, created_at FROM Users WHERE user_id = ?",
         user_id
     )
     .fetch_one(&db_pool)
@@ -81,7 +81,7 @@ pub async fn update_user(
 
     match query_as!(
         User,
-        "UPDATE Users SET username = $1, user_email = $2, user_password = $3 WHERE user_id = $4 RETURNING user_id, username, user_email, user_password, created_at",
+        "UPDATE Users SET username = ?, user_email = ?, user_password = ? WHERE user_id = ? RETURNING user_id, username, user_email, user_password, created_at",
         user.username,
         user.user_email,
         user.user_password,
@@ -102,7 +102,7 @@ pub async fn delete_user(
     let db_pool = state.lock().await.db_pool.clone();
 
     match query!(
-        "DELETE FROM Users WHERE user_id = $1",
+        "DELETE FROM Users WHERE user_id = ?",
         user_id
     )
     .execute(&db_pool)

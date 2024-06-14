@@ -17,7 +17,7 @@ pub async fn create_transaction(
 
     match query_as!(
         Transaction,
-        "INSERT INTO Transactions (account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description",
+        "INSERT INTO Transactions (account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description) VALUES (?, ?, ?, ?, ?, ?) RETURNING transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description",
         transaction.account_id,
         transaction.child_category_id,
         transaction.transaction_amount,
@@ -41,7 +41,7 @@ pub async fn get_transaction(
 
     match query_as!(
         Transaction,
-        "SELECT transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description FROM Transactions WHERE transaction_id = $1",
+        "SELECT transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description FROM Transactions WHERE transaction_id = ?",
         transaction_id
     )
     .fetch_one(&db_pool)
@@ -61,7 +61,7 @@ pub async fn update_transaction(
 
     match query_as!(
         Transaction,
-        "UPDATE Transactions SET transaction_amount = $1, transaction_type = $2, transaction_date = $3, transaction_description = $4 WHERE transaction_id = $5 RETURNING transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description",
+        "UPDATE Transactions SET transaction_amount = ?, transaction_type = ?, transaction_date = ?, transaction_description = ? WHERE transaction_id = ? RETURNING transaction_id, account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description",
         transaction.transaction_amount,
         transaction.transaction_type,
         transaction.transaction_date,
@@ -83,7 +83,7 @@ pub async fn delete_transaction(
     let db_pool = state.lock().await.db_pool.clone();
 
     match query!(
-        "DELETE FROM Transactions WHERE transaction_id = $1",
+        "DELETE FROM Transactions WHERE transaction_id = ?",
         transaction_id
     )
     .execute(&db_pool)

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sqlx::types::Type;
-use sqlx::{Encode, Decode, Postgres, postgres::PgTypeInfo};
+use sqlx::{Encode, Decode, MySql, mysql::MySqlTypeInfo};
 use std::error::Error;
 use std::fmt;
 
@@ -12,21 +12,21 @@ pub enum CategoryType {
     Expense = 2,
 }
 
-impl Type<Postgres> for CategoryType {
-    fn type_info() -> PgTypeInfo {
-        <i32 as Type<Postgres>>::type_info()
+impl Type<MySql> for CategoryType {
+    fn type_info() -> MySqlTypeInfo {
+        <i32 as Type<MySql>>::type_info()
     }
 }
 
-impl Encode<'_, Postgres> for CategoryType {
-    fn encode_by_ref(&self, buf: &mut sqlx::postgres::PgArgumentBuffer) -> sqlx::encode::IsNull {
-        <i32 as Encode<Postgres>>::encode_by_ref(&(*self as i32), buf)
+impl Encode<'_, MySql> for CategoryType {
+    fn encode_by_ref(&self, buf: &mut Vec<u8>) -> sqlx::encode::IsNull {
+        <i32 as Encode<MySql>>::encode_by_ref(&(*self as i32), buf)
     }
 }
 
-impl<'r> Decode<'r, Postgres> for CategoryType {
-    fn decode(value: sqlx::postgres::PgValueRef<'r>) -> Result<Self, Box<dyn Error + Send + Sync>> {
-        let v = <i32 as Decode<Postgres>>::decode(value)?;
+impl<'r> Decode<'r, MySql> for CategoryType {
+    fn decode(value: sqlx::mysql::MySqlValueRef<'r>) -> Result<Self, Box<dyn Error + Send + Sync>> {
+        let v = <i32 as Decode<MySql>>::decode(value)?;
         match v {
             1 => Ok(CategoryType::Income),
             2 => Ok(CategoryType::Expense),

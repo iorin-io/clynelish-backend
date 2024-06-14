@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use chrono::NaiveDate;
+use time::OffsetDateTime;
 use sqlx::types::BigDecimal;
 use crate::serializers::bigdecimal_serde;
 
@@ -11,6 +11,6 @@ pub struct Transaction {
     #[serde(with = "bigdecimal_serde")]
     pub transaction_amount: BigDecimal,
     pub transaction_type: String,
-    pub transaction_date: NaiveDate,
+    pub transaction_date: Option<OffsetDateTime>,
     pub transaction_description: Option<String>,
 }

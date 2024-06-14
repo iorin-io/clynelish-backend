@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use chrono::NaiveDateTime;
+use time::OffsetDateTime;
 
 #[derive(Deserialize, Serialize)]
 pub struct User {
@@ -7,5 +7,5 @@ pub struct User {
     pub username: String,
     pub user_email: String,
     pub firebase_uid: String,
-    pub created_at: Option<NaiveDateTime>,
+    pub created_at: Option<OffsetDateTime>,
 }

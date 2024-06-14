@@ -10,10 +10,12 @@ struct FirebaseClaims {
 }
 
 async fn verify_firebase_token(token: &str) -> Result<FirebaseClaims, Box<dyn Error>> {
-    let google_jwks_url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys";
+    let google_jwks_url = "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
     let jwks: serde_json::Value = reqwest::get(google_jwks_url).await?.json().await?;
 
-    let header = decode::<serde_json::Value>(token, &DecodingKey::from_secret("your_secret".as_ref()), &Validation::new(Algorithm::RS256)).unwrap().header;
+    let header = decode::<serde_json::Value>(token, &DecodingKey::from_secret("your_secret".as_ref()), &Validation::new(Algorithm::RS256))
+        .unwrap()
+        .header;
     let kid = header.kid.ok_or("Invalid token: missing kid")?;
 
     let jwk = jwks.get(&kid).ok_or("Invalid token: unknown kid")?;

@@ -17,7 +17,7 @@ pub async fn create_account(
 
     match query_as!(
         Account,
-        "INSERT INTO Accounts (user_id, account_name, initial_balance) VALUES ($1, $2, $3) RETURNING account_id, user_id, account_name, initial_balance, created_at",
+        "INSERT INTO Accounts (user_id, account_name, initial_balance) VALUES (?, ?, ?) RETURNING account_id, user_id, account_name, initial_balance, created_at",
         account.user_id,
         account.account_name,
         account.initial_balance
@@ -38,7 +38,7 @@ pub async fn get_account(
 
     match query_as!(
         Account,
-        "SELECT account_id, user_id, account_name, initial_balance, created_at FROM Accounts WHERE account_id = $1",
+        "SELECT account_id, user_id, account_name, initial_balance, created_at FROM Accounts WHERE account_id = ?",
         account_id
     )
     .fetch_one(&db_pool)
@@ -58,7 +58,7 @@ pub async fn update_account(
 
     match query_as!(
         Account,
-        "UPDATE Accounts SET account_name = $1, initial_balance = $2 WHERE account_id = $3 RETURNING account_id, user_id, account_name, initial_balance, created_at",
+        "UPDATE Accounts SET account_name = ?, initial_balance = ? WHERE account_id = ? RETURNING account_id, user_id, account_name, initial_balance, created_at",
         account.account_name,
         account.initial_balance,
         account_id
@@ -78,7 +78,7 @@ pub async fn delete_account(
     let db_pool = state.lock().await.db_pool.clone();
 
     match query!(
-        "DELETE FROM Accounts WHERE account_id = $1",
+        "DELETE FROM Accounts WHERE account_id = ?",
         account_id
     )
     .execute(&db_pool)

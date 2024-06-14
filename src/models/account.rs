@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use chrono::NaiveDateTime;
+use time::OffsetDateTime;
 use sqlx::types::BigDecimal;
 use crate::serializers::bigdecimal_serde;
 
@@ -10,5 +10,5 @@ pub struct Account {
     pub account_name: String,
     #[serde(with = "bigdecimal_serde")]
     pub initial_balance: BigDecimal,
-    pub created_at: Option<NaiveDateTime>,
+    pub created_at: Option<OffsetDateTime>,
 }
