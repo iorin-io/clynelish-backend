@@ -1,9 +1,9 @@
-CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
 CREATE DATABASE IF NOT EXISTS `clynelish-db`;
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON `clynelish-db`.* TO 'user'@'%';
 FLUSH PRIVILEGES;
-USE `clynelish-db`;
 
+USE `clynelish-db`;
 
 CREATE TABLE IF NOT EXISTS Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
