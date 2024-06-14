@@ -11,43 +11,77 @@ use crate::models::{parent_category::ParentCategory, child_category::ChildCatego
 
 pub async fn create_parent_category(
     Extension(state): Extension<Arc<Mutex<AppState>>>,
-    Json(category): Json<ParentCategory>
+    Json(new_category): Json<ParentCategory>
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        ParentCategory,
-        "INSERT INTO ParentCategories (account_id, parent_category_name, color, category_type) VALUES (?, ?, ?, ?) RETURNING parent_category_id, account_id, parent_category_name, color, category_type",
-        category.account_id,
-        category.parent_category_name,
-        category.color,
-        category.category_type as i32
+    match query!(
+        "INSERT INTO ParentCategories (account_id, parent_category_name, color, category_type) VALUES (?, ?, ?, ?)",
+        new_category.account_id,
+        new_category.parent_category_name,
+        new_category.color,
+        new_category.category_type as i32
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(new_category) => (StatusCode::CREATED, Json(new_category)).into_response(),
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Ok(result) => {
+            let parent_category_id = result.last_insert_id();
+            match query_as!(
+                ParentCategory,
+                "SELECT parent_category_id, account_id, parent_category_name, color, category_type FROM ParentCategories WHERE parent_category_id = ?",
+                parent_category_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(category) => (StatusCode::CREATED, Json(category)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch parent category after creation: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
+        Err(e) => {
+            eprintln!("Failed to create parent category: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 
 pub async fn create_child_category(
     Extension(state): Extension<Arc<Mutex<AppState>>>,
-    Json(category): Json<ChildCategory>
+    Json(new_category): Json<ChildCategory>
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        ChildCategory,
-        "INSERT INTO ChildCategories (parent_category_id, child_category_name) VALUES (?, ?) RETURNING child_category_id, parent_category_id, child_category_name",
-        category.parent_category_id,
-        category.child_category_name
+    match query!(
+        "INSERT INTO ChildCategories (parent_category_id, child_category_name) VALUES (?, ?)",
+        new_category.parent_category_id,
+        new_category.child_category_name
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(new_category) => (StatusCode::CREATED, Json(new_category)).into_response(),
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Ok(result) => {
+            let child_category_id = result.last_insert_id();
+            match query_as!(
+                ChildCategory,
+                "SELECT child_category_id, parent_category_id, child_category_name FROM ChildCategories WHERE child_category_id = ?",
+                child_category_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(category) => (StatusCode::CREATED, Json(category)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch child category after creation: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
+        Err(e) => {
+            eprintln!("Failed to create child category: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 
@@ -92,19 +126,35 @@ pub async fn update_parent_category(
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        ParentCategory,
-        "UPDATE ParentCategories SET parent_category_name = ?, color = ?, category_type = ? WHERE parent_category_id = ? RETURNING parent_category_id, account_id, parent_category_name, color, category_type",
+    match query!(
+        "UPDATE ParentCategories SET parent_category_name = ?, color = ?, category_type = ? WHERE parent_category_id = ?",
         category.parent_category_name,
         category.color,
         category.category_type as i32,
         parent_category_id
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(updated_category) => (StatusCode::OK, Json(updated_category)).into_response(),
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Ok(_) => {
+            match query_as!(
+                ParentCategory,
+                "SELECT parent_category_id, account_id, parent_category_name, color, category_type FROM ParentCategories WHERE parent_category_id = ?",
+                parent_category_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(updated_category) => (StatusCode::OK, Json(updated_category)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch parent category after update: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
+        Err(e) => {
+            eprintln!("Failed to update parent category: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 
@@ -115,17 +165,33 @@ pub async fn update_child_category(
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        ChildCategory,
-        "UPDATE ChildCategories SET child_category_name = ? WHERE child_category_id = ? RETURNING child_category_id, parent_category_id, child_category_name",
+    match query!(
+        "UPDATE ChildCategories SET child_category_name = ? WHERE child_category_id = ?",
         category.child_category_name,
         child_category_id
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(updated_category) => (StatusCode::OK, Json(updated_category)).into_response(),
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Ok(_) => {
+            match query_as!(
+                ChildCategory,
+                "SELECT child_category_id, parent_category_id, child_category_name FROM ChildCategories WHERE child_category_id = ?",
+                child_category_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(updated_category) => (StatusCode::OK, Json(updated_category)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch child category after update: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
+        Err(e) => {
+            eprintln!("Failed to update child category: {:?}", e);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }
 

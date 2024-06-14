@@ -11,21 +11,35 @@ use crate::models::user::User;
 
 pub async fn create_user(
     Extension(state): Extension<Arc<Mutex<AppState>>>,
-    Json(user): Json<User>
+    Json(new_user): Json<User>
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        User,
-        "INSERT INTO Users (username, user_email, user_password) VALUES (?, ?, ?) RETURNING user_id, username, user_email, user_password, created_at",
-        user.username,
-        user.user_email,
-        user.user_password
+    match query!(
+        "INSERT INTO Users (username, user_email, firebase_uid) VALUES (?, ?, ?)",
+        new_user.username,
+        new_user.user_email,
+        new_user.firebase_uid
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(new_user) => (StatusCode::CREATED, Json(new_user)).into_response(),
+        Ok(result) => {
+            let user_id = result.last_insert_id();
+            match query_as!(
+                User,
+                "SELECT user_id, username, user_email, firebase_uid, created_at FROM Users WHERE user_id = ?",
+                user_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(user) => (StatusCode::CREATED, Json(user)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch user after creation: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
         Err(e) => {
             eprintln!("Failed to create user: {:?}", e);
             StatusCode::INTERNAL_SERVER_ERROR.into_response()
@@ -41,7 +55,7 @@ pub async fn get_user(
 
     match query_as!(
         User,
-        "SELECT user_id, username, user_email, user_password, created_at FROM Users WHERE user_id = ?",
+        "SELECT user_id, username, user_email, firebase_uid, created_at FROM Users WHERE user_id = ?",
         user_id
     )
     .fetch_one(&db_pool)
@@ -59,7 +73,7 @@ pub async fn get_users(
 
     match query_as!(
         User,
-        "SELECT user_id, username, user_email, user_password, created_at FROM Users"
+        "SELECT user_id, username, user_email, firebase_uid, created_at FROM Users"
     )
     .fetch_all(&db_pool)
     .await
@@ -79,18 +93,31 @@ pub async fn update_user(
 ) -> impl IntoResponse {
     let db_pool = state.lock().await.db_pool.clone();
 
-    match query_as!(
-        User,
-        "UPDATE Users SET username = ?, user_email = ?, user_password = ? WHERE user_id = ? RETURNING user_id, username, user_email, user_password, created_at",
+    match query!(
+        "UPDATE Users SET username = ?, user_email = ?, firebase_uid = ? WHERE user_id = ?",
         user.username,
         user.user_email,
-        user.user_password,
+        user.firebase_uid,
         user_id
     )
-    .fetch_one(&db_pool)
+    .execute(&db_pool)
     .await
     {
-        Ok(updated_user) => (StatusCode::OK, Json(updated_user)).into_response(),
+        Ok(_) => {
+            match query_as!(
+                User,
+                "SELECT user_id, username, user_email, firebase_uid, created_at FROM Users WHERE user_id = ?",
+                user_id
+            )
+            .fetch_one(&db_pool)
+            .await {
+                Ok(updated_user) => (StatusCode::OK, Json(updated_user)).into_response(),
+                Err(e) => {
+                    eprintln!("Failed to fetch user after update: {:?}", e);
+                    StatusCode::INTERNAL_SERVER_ERROR.into_response()
+                }
+            }
+        },
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }
