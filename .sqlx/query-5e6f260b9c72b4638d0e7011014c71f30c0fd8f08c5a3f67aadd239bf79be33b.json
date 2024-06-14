@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO Transactions (account_id, child_category_id, transaction_amount, transaction_type, transaction_date, transaction_description) VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "5e6f260b9c72b4638d0e7011014c71f30c0fd8f08c5a3f67aadd239bf79be33b"
+}

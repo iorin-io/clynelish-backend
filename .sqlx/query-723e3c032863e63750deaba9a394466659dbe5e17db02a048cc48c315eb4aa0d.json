@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO ParentCategories (account_id, parent_category_name, color, category_type) VALUES (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "723e3c032863e63750deaba9a394466659dbe5e17db02a048cc48c315eb4aa0d"
+}

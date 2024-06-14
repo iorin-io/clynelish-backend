@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO Users (username, user_email, firebase_uid) VALUES (?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "b0df5dc3d9a8f961d8cb157e8b8f2151be1263f5a9ad4d19be6e50732038f979"
+}

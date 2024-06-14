@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE ParentCategories SET parent_category_name = ?, color = ?, category_type = ? WHERE parent_category_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "8751f9151ccb18d1aa2914fb54cca2d363ea9f40bfa6ebe3583c81b3c6c18ef1"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO ChildCategories (parent_category_id, child_category_name) VALUES (?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "cbe7355230dfdbc817b5ff0bf769531bf3199d99fe4ae84313a9bb786a145b9e"
+}

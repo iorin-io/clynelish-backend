@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE Accounts SET account_name = ?, initial_balance = ? WHERE account_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "4e3870b60a4152bebaf8c2b93bd3045ee9e812d175848284dc117fe3e5af5a2b"
+}

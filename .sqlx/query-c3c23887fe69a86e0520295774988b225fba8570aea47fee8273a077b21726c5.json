@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE Transactions SET transaction_amount = ?, transaction_type = ?, transaction_date = ?, transaction_description = ? WHERE transaction_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "c3c23887fe69a86e0520295774988b225fba8570aea47fee8273a077b21726c5"
+}

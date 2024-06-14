@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE ChildCategories SET child_category_name = ? WHERE child_category_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "6403608bf309dd193421fcb3134b72e9376cf1841c3de6e059ddda54a32d156d"
+}

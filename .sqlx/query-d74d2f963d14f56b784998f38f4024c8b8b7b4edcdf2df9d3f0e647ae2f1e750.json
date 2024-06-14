@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "DELETE FROM ChildCategories WHERE child_category_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "d74d2f963d14f56b784998f38f4024c8b8b7b4edcdf2df9d3f0e647ae2f1e750"
+}
